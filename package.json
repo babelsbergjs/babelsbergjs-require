@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/babelsbergjs/babelsbergjs-require",
   "dependencies": {
+    "assert": "^1.3.0",
     "uglifyjs": "^2.4.10"
   },
   "devDependencies": {

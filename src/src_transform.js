@@ -1,5 +1,6 @@
 var bbb = require('babelsbergjs-core');
-var UglifyJS = require('uglifyjs')
+var UglifyJS = require('uglifyjs');
+var assert = require ('assert');
 
 // 'cop.Layers',
 // 'lively.morphic.Halos',

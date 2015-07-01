@@ -6,66 +6,62 @@ var BabelsbergSrcTransform = require("../src/src_transform");
 
 
 describe('bbb_src_transform', function() {
-  it('transforms prolog rule with quotes.', function() {
-    var src = "rule: 'abs(N,N) |- N>=0'";
-    var result = new BabelsbergSrcTransform().transform(src);
-    result = result.replace(/[ \n\r\t]/g,"");
-    result.should.be.exactly("bbb.rule(\"abs(N,N):-N>=0\");");
-  });
-});
-/*
-TestCase.subclass('users.timfelgentreff.babelsberg.src_transform_test.TransformTest', {
-    testPrologTransform1: function () {
+  describe('transformation', function() {
+    it('transforms prolog rule with quotes.', function() {
         var src = "rule: 'abs(N,N) |- N>=0'";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "bbb.rule(\"abs(N,N):-N>=0\");", result);
-    },
+        result.should.be.exactly("bbb.rule(\"abs(N,N):-N>=0\");");
+    });
 
-    testPrologTransform2: function () {
+    it('transforms prolog rule with braces.', function () {
         var src = "rule: { abs(N,N) |- N>=0 }";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "bbb.rule(\"abs(N,N):-N>=0\");", result);
-    },
+        result.should.be.exactly("bbb.rule(\"abs(N,N):-N>=0\");");
+    });
 
-    testAssignResult2: function () {
+    xit('transforms name in always.', function () {
         var src = "always: {name: c; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});", result);
-    },
-    testAssignResult: function () {
+        result.should.be.exactly("c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
+    });
+
+    xit('transforms store in always.', function () {
         var src = "always: {store: c; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});", result);
-    },
+        result.should.be.exactly("c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
+    });
 
-    testObjectEditorTransform1: function () {
+    xit('transforms simple comparison.', function () {
         var src = "always: {a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "bbb.always({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});", result);
-    },
-    testObjectEditorTransform2: function () {
+        result.should.be.exactly("bbb.always({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
+    });
+
+    xit('transforms comparison with priority.', function () {
         var src = "always: {solver: cassowary; priority: 'high'; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "bbb.always({solver:cassowary,priority:\"high\",ctx:{cassowary:cassowary,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});", result);
-    },
-    testObjectEditorTransformTrigger: function () {
+        result.should.be.exactly("bbb.always({solver:cassowary,priority:\"high\",ctx:{cassowary:cassowary,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
+    });
+
+    xit('transforms trigger.', function () {
         var src = "var c = when(function() {a < b}).trigger(function () { alert });";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "varc=bbb.when({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;}).trigger(function(){alert;});", result);
-    },
-    testOETransformWithLaterDeclarations: function () {
+        result.should.be.exactly("varc=bbb.when({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;}).trigger(function(){alert;});");
+    });
+
+    xit('transforms invariant true.', function () {
         var src = "always: { true }\n\
                     var late;\n";
         var result = new BabelsbergSrcTransform().transform(src);
         // asserts correct indenting, too
-        this.assert(result === "bbb.always({\n" +
+        result.should.be.exactly("bbb.always({\n" +
                                "    ctx: {\n" +
                                "        _$_self: this.doitContext || this\n" +
                                "    }\n" +
@@ -73,9 +69,10 @@ TestCase.subclass('users.timfelgentreff.babelsberg.src_transform_test.TransformT
                                "    return true;;\n" +
                                "});\n" +
                                "\n" +
-                               "var late;", result);
-    },
-    testSCBTransformMulti: function () {
+                               "var late;");
+    });
+
+    xit('SCBTransformMulti', function () {
         var src = "always: {solver: cassowary; priority: 'high'; a < b}\n    always: {solver: cassowary; priority: 'high'; a < b}",
             panel = new lively.ide.BrowserPanel(pt(100,100)),
             editor = new lively.morphic.CodeEditor(rect(0,0,100,100), "    " + src);
@@ -99,10 +96,10 @@ TestCase.subclass('users.timfelgentreff.babelsberg.src_transform_test.TransformT
               "        return a < b;;\n" +
               "    });";
         result += "\n" + result;
-        this.assert(editor.textString === result, editor.textString);
-    },
+        result.should.equal(textString);
+    });
 
-    testSCBTransform: function () {
+    xit('uses desfined solver after transformation.', function () {
         var src = "always: {solver: cassowary; priority: 'high'; a < b}",
             panel = new lively.ide.BrowserPanel(pt(100,100)),
             editor = new lively.morphic.CodeEditor(rect(0,0,100,100), "    " + src);
@@ -125,54 +122,65 @@ TestCase.subclass('users.timfelgentreff.babelsberg.src_transform_test.TransformT
                                           "    }, function() {\n" +
                                           "        return a < b;;\n" +
                                           "    });", editor.textString);
-    },
-    testConvertAddScript: function() {
+    });
+
+    it('adds script.', function() {
         var src = "this.addScript(function () { foo })";
         var result = new BabelsbergSrcTransform().transformAddScript(src);
         result = result.replace(/[ \n\r\t]/g,"");
-        this.assert(result === "this.addScript(function(){foo;},\"function(){foo}\");", result);
-    }
-});
-TestCase.subclass('users.timfelgentreff.babelsberg.src_transform_test.MinifyTest', {
-    testBuildMinifiedJs: function () {
+        result.should.be.exactly("this.addScript(function(){foo;},\"function(){foo}\");");
+    });
+  });
+
+  xdescribe('minifying', function () {
+    it('builds Minified Js (pt. 0)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["prototypejs", "core", "cassowary", "deltablue", "csp"], "babelsberg_mini_prototype");
-    },
-    testBuildMinifiedJs1: function () {
+    });
+
+    it('builds Minified Js (pt. 1)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["core", "cassowary", "deltablue", "csp"], "babelsberg_mini");
-    },
-    testBuildMinifiedJs2: function () {
+    });
+
+    it('builds Minified Js (pt. 2)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["core"], "babelsberg_core");
-    },
-    testBuildMinifiedJs3: function () {
+    });
+
+    it('builds Minified Js (pt. 3)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["deltablue"], "babelsberg_deltablue");
-    },
-    testBuildMinifiedJs4: function () {
+    });
+
+    it('builds Minified Js (pt. 4)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["cassowary"], "babelsberg_cassowary");
-    },
-    testBuildMinifiedJs5: function () {
+    });
+
+    it('builds Minified Js (pt. 5)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["csp"], "babelsberg_csp");
-    },
-    testBuildMinifiedJs6: function () {
+    });
+
+    it('builds Minified Js (pt. 6)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["sutherland"], "babelsberg_sutherland");
-    },
-    testBuildMinifiedJs7: function () {
+    });
+
+    it('builds Minified Js (pt. 7)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["reactive"], "babelsberg_reactive");
-    },
-    testBuildMinifiedJs8: function () {
+    });
+
+    it('builds Minified Js (pt. 8)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["z3"], "babelsberg_z3");
-    },
-    testBuildMinifiedJs9: function () {
+    });
+
+    it('builds Minified Js (pt. 9)', function () {
         module("users.timfelgentreff.standalone.Compressor").load(true);
         users.timfelgentreff.standalone.Compressor.doAction(["backtalk"], "babelsberg_backtalk");
-    }
+    });
+  });
 });
-*/
