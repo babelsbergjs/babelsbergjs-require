@@ -1,0 +1,31 @@
+{
+  "name": "babelsbergjs-require",
+  "version": "0.1.0",
+  "description": "BabelsbergJS require",
+  "main": "src/index.js",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "test": "mocha",
+    "start": "echo 'Start node-inspector in a separate terminal!' && mocha -d --debug-brk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/babelsbergjs/babelsbergjs-require.git"
+  },
+  "keywords": [
+    "constraints",
+    "babelsberg"
+  ],
+  "author": "The Babelsberg Team",
+  "bugs": {
+    "url": "https://github.com/babelsbergjs/babelsbergjs-require/issues"
+  },
+  "homepage": "https://github.com/babelsbergjs/babelsbergjs-require",
+  "dependencies": {
+    "uglifyjs": "^2.4.10"
+  },
+  "devDependencies": {
+    "babelsbergjs-core": "^0.1.0",
+    "should": "^7.0.1"
+  }
+}
