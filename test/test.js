@@ -21,42 +21,42 @@ describe('bbb_src_transform', function() {
         result.should.be.exactly("bbb.rule(\"abs(N,N):-N>=0\");");
     });
 
-    xit('transforms name in always.', function () {
+    it('transforms name in always.', function () {
         var src = "always: {name: c; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
     });
 
-    xit('transforms store in always.', function () {
+    it('transforms store in always.', function () {
         var src = "always: {store: c; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("c=bbb.always({ctx:{c:c,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
     });
 
-    xit('transforms simple comparison.', function () {
+    it('transforms simple comparison.', function () {
         var src = "always: {a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("bbb.always({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
     });
 
-    xit('transforms comparison with priority.', function () {
+    it('transforms comparison with priority.', function () {
         var src = "always: {solver: cassowary; priority: 'high'; a < b}";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("bbb.always({solver:cassowary,priority:\"high\",ctx:{cassowary:cassowary,a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;});");
     });
 
-    xit('transforms trigger.', function () {
+    it('transforms trigger.', function () {
         var src = "var c = when(function() {a < b}).trigger(function () { alert });";
         var result = new BabelsbergSrcTransform().transform(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("varc=bbb.when({ctx:{a:a,b:b,_$_self:this.doitContext||this}},function(){returna<b;;}).trigger(function(){alert;});");
     });
 
-    xit('transforms invariant true.', function () {
+    it('transforms invariant true.', function () {
         var src = "always: { true }\n\
                     var late;\n";
         var result = new BabelsbergSrcTransform().transform(src);
@@ -70,58 +70,6 @@ describe('bbb_src_transform', function() {
                                "});\n" +
                                "\n" +
                                "var late;");
-    });
-
-    xit('SCBTransformMulti', function () {
-        var src = "always: {solver: cassowary; priority: 'high'; a < b}\n    always: {solver: cassowary; priority: 'high'; a < b}",
-            panel = new lively.ide.BrowserPanel(pt(100,100)),
-            editor = new lively.morphic.CodeEditor(rect(0,0,100,100), "    " + src);
-        panel.addMorph(editor);
-        editor.evalEnabled = false;
-
-        cop.withLayers([ConstraintSyntaxLayer], function () {
-            editor.doSave();
-        });
-        // asserts correct indenting, too
-        result = "    bbb.always({\n" +
-              "        solver: cassowary,\n" +
-              "        priority: \"high\",\n" +
-              "        ctx: {\n" +
-              "            cassowary: cassowary,\n" +
-              "            a: a,\n" +
-              "            b: b,\n" +
-              "            _$_self: this.doitContext || this\n" +
-              "        }\n" +
-              "    }, function() {\n" +
-              "        return a < b;;\n" +
-              "    });";
-        result += "\n" + result;
-        result.should.equal(textString);
-    });
-
-    xit('uses desfined solver after transformation.', function () {
-        var src = "always: {solver: cassowary; priority: 'high'; a < b}",
-            panel = new lively.ide.BrowserPanel(pt(100,100)),
-            editor = new lively.morphic.CodeEditor(rect(0,0,100,100), "    " + src);
-        panel.addMorph(editor);
-        editor.evalEnabled = false;
-
-        cop.withLayers([ConstraintSyntaxLayer], function () {
-            editor.doSave();
-        });
-        // asserts correct indenting, too
-        this.assert(editor.textString === "    bbb.always({\n" +
-                                          "        solver: cassowary,\n" +
-                                          "        priority: \"high\",\n" +
-                                          "        ctx: {\n" +
-                                          "            cassowary: cassowary,\n" +
-                                          "            a: a,\n" +
-                                          "            b: b,\n" +
-                                          "            _$_self: this.doitContext || this\n" +
-                                          "        }\n" +
-                                          "    }, function() {\n" +
-                                          "        return a < b;;\n" +
-                                          "    });", editor.textString);
     });
 
     it('adds script.', function() {

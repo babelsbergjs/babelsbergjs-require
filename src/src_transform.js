@@ -1,3 +1,6 @@
+var prototype = require('prototype')
+Object.extend(global, prototype)
+
 var bbb = require('babelsbergjs-core');
 var UglifyJS = require('uglifyjs');
 var assert = require ('assert');
@@ -82,9 +85,9 @@ Object.subclass('BabelsbergSrcTransform', {
     createContextFor: function(ast, constraintNode) {
         var enclosed = ast.enclosed,
             self = this;
-        if (constraintNode.args.last() instanceof UglifyJS.AST_Function) {
-            enclosed = constraintNode.args.last().enclosed || [];
-            enclosed = enclosed.reject(function(ea) {
+        if ($A(constraintNode.args).last() instanceof UglifyJS.AST_Function) {
+            enclosed = $A(constraintNode.args).last().enclosed || [];
+            enclosed = $A(enclosed).reject(function(ea) {
                 // reject all that
                 //   1. are not declared (var) BEFORE the always
                 //   2. are first referenced (globals, specials, etc) AFTER the always
@@ -97,7 +100,7 @@ Object.subclass('BabelsbergSrcTransform', {
         var ctx = new UglifyJS.AST_Object({
             start: constraintNode.start,
             end: constraintNode.end,
-            properties: enclosed.collect(function(ea) {
+            properties: $A(enclosed).collect(function(ea) {
                 return new UglifyJS.AST_ObjectKeyVal({
                     start: constraintNode.start,
                     end: constraintNode.end,
@@ -195,7 +198,7 @@ Object.subclass('BabelsbergSrcTransform', {
     },
 
     ensureReturnIn: function(body) {
-        var lastStatement = body.last();
+        var lastStatement = $A(body).last();
         if (!(lastStatement.body instanceof UglifyJS.AST_Return)) {
             body[body.length - 1] = new UglifyJS.AST_Return({
                 start: lastStatement.start,
@@ -211,7 +214,7 @@ Object.subclass('BabelsbergSrcTransform', {
             args = [],
             extraArgs = [],
             store;
-        newBody = body.select(function(ea) {
+        newBody = $A(body).select(function(ea) {
             if (ea instanceof UglifyJS.AST_LabeledStatement) {
                 if (!(ea.body instanceof UglifyJS.AST_SimpleStatement)) {
                     throw new SyntaxError(
@@ -276,7 +279,7 @@ Object.subclass('BabelsbergSrcTransform', {
         }
 
         this.ensureReturnIn(body);
-        body.each(function(ea) {
+        $A(body).each(function(ea) {
             self.ensureThisToSelfIn(ea);
         });
 
