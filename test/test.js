@@ -1,4 +1,5 @@
 var should = require("should")
+var bbb_require = require("../src/index")
 var BabelsbergSrcTransform = require("../src/src_transform");
 
 //'lively.TestFramework'
@@ -77,6 +78,18 @@ describe('bbb_src_transform', function() {
         var result = new BabelsbergSrcTransform().transformAddScript(src);
         result = result.replace(/[ \n\r\t]/g,"");
         result.should.be.exactly("this.addScript(function(){foo;},\"function(){foo}\");");
+    });
+  });
+  describe('requiring', function() {
+    it('requires a simple file.', function() {
+        var func = bbb_require('./test/BabelsbergJsTestFiles/simpleFunction.bbb');
+        func.should.be.a.Function;
+        func().should.be.true();
+    });
+    it('requires a file containing a working constraint.', function() {
+        var func = bbb_require('./test/BabelsbergJsTestFiles/simpleConstraint.bbb');
+        func.should.be.a.Function;
+        func().should.be.true();
     });
   });
 });
