@@ -1,4 +1,4 @@
-var BabelsbergSrcTransform = require('./src_transform.js')
+var BabelsbergSrcTransform = require('babelsbergjs-srctransform')
 var fs = require('fs');
 
 module.exports = function bbb_require(filename) {
